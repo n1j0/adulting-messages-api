@@ -12,6 +12,10 @@ exports.handler = async function (event) {
     const formatter = Intl.DateTimeFormat('de-DE', { month: '2-digit', day: '2-digit', year: '2-digit' })
     const date = formatter.format(new Date())
     try {
+        const [rows, fields] = await connection.execute('SELECT * FROM `messages`')
+        if (rows.length === 3) {
+            await connection.execute('DELETE FROM messages LIMIT 1')
+        }
         await connection.execute('INSERT INTO messages (text, date) VALUES (?, ?)', [ msg, date ])
         connection.end()
         return {
