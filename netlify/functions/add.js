@@ -21,7 +21,7 @@ exports.handler = async function (event) {
         connection.end()
         return {
             statusCode: 500,
-            body: 'Message could not be added.'
+            body: JSON.stringify(e)
         }
     }
 }
