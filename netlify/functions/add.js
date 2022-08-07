@@ -12,7 +12,7 @@ exports.handler = async function (event) {
     const formatter = Intl.DateTimeFormat('de-DE', { month: '2-digit', day: '2-digit', year: '2-digit' })
     const date = formatter.format(new Date())
     try {
-        await connection.execute('INSERT INTO messages (text, date) VALUES ($1, $2)', [ msg, date ])
+        await connection.execute('INSERT INTO messages (text, date) VALUES (?, ?)', [ msg, date ])
         connection.end()
         return {
             statusCode: 201,
