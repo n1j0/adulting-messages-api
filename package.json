@@ -1,0 +1,23 @@
+{
+  "name": "adulting",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/n1j0/adulting-messages-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/n1j0/adulting-messages-api/issues"
+  },
+  "homepage": "https://github.com/n1j0/adulting-messages-api#readme",
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "mysql2": "^2.3.3"
+  }
+}
