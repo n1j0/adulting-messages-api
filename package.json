@@ -18,6 +18,7 @@
   "homepage": "https://github.com/n1j0/adulting-messages-api#readme",
   "dependencies": {
     "dotenv": "^16.0.1",
+    "leo-profanity": "^1.6.1",
     "mysql2": "^2.3.3"
   }
 }

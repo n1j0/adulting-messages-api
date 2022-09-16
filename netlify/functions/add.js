@@ -1,6 +1,7 @@
 exports.handler = async function (event) {
     require('dotenv').config()
     const mysql = require('mysql2/promise')
+    const filter = require('leo-profanity')
     const connection = await mysql.createConnection(process.env.DATABASE_URL)
     const msg = event.queryStringParameters.message
     if (!msg) {
@@ -16,7 +17,7 @@ exports.handler = async function (event) {
         if (rows.length >= 100) {
             await connection.execute('DELETE FROM messages LIMIT 1')
         }
-        await connection.execute('INSERT INTO messages (text, date) VALUES (?, ?)', [ msg, date ])
+        await connection.execute('INSERT INTO messages (text, date) VALUES (?, ?)', [ filter.clean(msg), date ])
         connection.end()
         return {
             statusCode: 201,
