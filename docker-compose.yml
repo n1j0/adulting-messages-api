@@ -1,0 +1,40 @@
+version: '3.5'
+
+volumes:
+  pg_data:
+
+services:
+  api:
+    container_name: adulting-api
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    depends_on:
+      - db
+    environment:
+      NODE_ENV: development
+      DB_URL: postgres://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_DATABASE}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_HOST: db
+      PORT: ${PORT}
+    ports:
+      - ${PORT}:${PORT}
+    volumes:
+      - ./src:/app/src/
+      - /src/node_modules
+    command: npm run dev
+  db:
+    container_name: adulting-postgres
+    image: postgres:10.21
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data/:rw
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${DB_DATABASE}
+      PGDATA: /var/lib/postgresql/data/
