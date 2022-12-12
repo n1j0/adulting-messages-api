@@ -5,7 +5,7 @@ volumes:
 
 services:
   api:
-    container_name: api
+    container_name: adulting-api
     build:
       context: .
       dockerfile: dev.Dockerfile
@@ -26,7 +26,7 @@ services:
       - /src/node_modules
     command: npm run dev
   db:
-    container_name: postgres
+    container_name: adulting-postgres
     image: postgres:10.21
     restart: unless-stopped
     ports:
