@@ -1,11 +1,11 @@
 {
   "name": "adulting",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "",
   "main": "./.out/index.js",
   "scripts": {
     "dev": "NODE_OPTIONS=\"--loader ts-node/esm\" nodemon --ext ts --experimental-specifier-resolution node ./src",
-    "start": "tsc && NODE_OPTIONS=\"--loader ts-node/esm\" NODE_ENV=production node ./.out/src/index.js",
+    "start": "tsc && NODE_OPTIONS=\"--loader ts-node/esm\" NODE_ENV=production node ./.out/index.js",
     "migrate:create": "NODE_OPTIONS=\"--loader ts-node/esm\" mikro-orm migration:create",
     "migrate:up": "NODE_OPTIONS=\"--loader ts-node/esm\" mikro-orm migration:up",
     "migrate:down": "NODE_OPTIONS=\"--loader ts-node/esm\" mikro-orm migration:down",
@@ -50,7 +50,7 @@
     "useTsNode": true,
     "configPaths": [
       "./src/config/mikro-orm.config.ts",
-      "./.out/src/config/mikro-orm.config.js"
+      "./.out/config/mikro-orm.config.js"
     ]
   }
 }
