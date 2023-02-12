@@ -39,6 +39,11 @@ try {
         return res.status(200).json(await em.find('Message', {} as any, { limit: 100, orderBy: [ { id: 'DESC' }] }))
     })
 
+    router.get('/sticker', async (req: Request, res: Response) => {
+        const em = orm.em.fork()
+        return res.status(200).json(await em.find('Sticker', {} as any))
+    })
+
     router.get('/messages/:id', async (req: Request, res: Response) => {
         const { id } = req.params
         if (!id) {
