@@ -24,6 +24,15 @@
           "nullable": false,
           "mappedType": "string"
         },
+        "sticker": {
+          "name": "sticker",
+          "type": "text[]",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "array"
+        },
         "date": {
           "name": "date",
           "type": "date",

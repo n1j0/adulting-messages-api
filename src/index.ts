@@ -53,15 +53,34 @@ try {
     })
 
     router.post('/add', async (req: Request, res: Response) => {
-        const { msg } = req.query
+        const { msg, sticker } = req.body
+
         if (!msg) {
             return res.status(400).json({ message: 'Missing Message' })
         }
         if (typeof msg !== 'string') {
             return res.status(400).json({ message: 'Message must be a string' })
         }
+        let cleanSticker = sticker
+        if (sticker) {
+            if (!Array.isArray(sticker)) {
+                return res.status(400).json({ message: 'Sticker must be an array' })
+            }
+            if (sticker.length > 0) {
+                for (const s of sticker) {
+                    if (typeof s !== 'string') {
+                        return res.status(400).json({ message: 'Sticker must be an array of strings' })
+                    }
+                }
+            }
+            if (sticker.length > 5) {
+                return res.status(400).json({ message: 'Sticker must be an array of strings with a maximum of 5 items' })
+            }
+            cleanSticker = [...new Set(sticker)]
+        }
         const em = orm.em.fork()
-        const message = new Message(filter.clean(msg.trim()))
+        const cleanMsg = filter.clean(msg.trim())
+        const message = new Message(cleanMsg, cleanSticker || [])
         try {
             await em.persistAndFlush(message)
             return res.status(201).json(message)
