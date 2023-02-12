@@ -2,6 +2,8 @@ import 'dotenv/config'
 import express, { Request, Response } from 'express'
 import helmet from 'helmet'
 import cors from 'cors'
+// @ts-ignore
+import filter from 'leo-profanity'
 import { MikroORM, RequestContext } from '@mikro-orm/core'
 import type { PostgreSqlDriver } from '@mikro-orm/postgresql'
 import mikroOrmConfig from './config/mikro-orm.config.js'
@@ -59,7 +61,7 @@ try {
             return res.status(400).json({ message: 'Message must be a string' })
         }
         const em = orm.em.fork()
-        const message = new Message(msg.trim())
+        const message = new Message(filter.clean(msg.trim()))
         try {
             await em.persistAndFlush(message)
             return res.status(201).json(message)
