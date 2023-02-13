@@ -4,10 +4,11 @@ import helmet from 'helmet'
 import cors from 'cors'
 // @ts-ignore
 import filter from 'leo-profanity'
-import { MikroORM, RequestContext } from '@mikro-orm/core'
+import { MikroORM, RequestContext, UniqueConstraintViolationException } from '@mikro-orm/core'
 import type { PostgreSqlDriver } from '@mikro-orm/postgresql'
 import mikroOrmConfig from './config/mikro-orm.config.js'
 import { Message } from './entities/message.js'
+import { Sticker } from './entities/sticker.js'
 
 try {
     const orm = await MikroORM.init<PostgreSqlDriver>(mikroOrmConfig)
@@ -54,6 +55,24 @@ try {
             return res.status(200).json(await em.findOne('Message', { id } as any))
         } catch (error: any) {
             return res.status(400).json({ message: 'Invalid ID' })
+        }
+    })
+
+    router.post('/sticker', async (req: Request, res: Response) => {
+        const { label } = req.body
+        if (!label) {
+            return res.status(400).json({ message: 'Missing Label' })
+        }
+        const em = orm.em.fork()
+        const sticker = new Sticker(label)
+        try {
+            await em.persistAndFlush(sticker)
+            return res.status(201).json(sticker)
+        } catch (error: any) {
+            if (error instanceof UniqueConstraintViolationException) {
+                return res.status(400).json({ message: 'Label already exists' })
+            }
+            return res.status(500).json('Ups something went wrong')
         }
     })
 

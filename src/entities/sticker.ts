@@ -5,7 +5,7 @@ export class Sticker {
     @PrimaryKey()
     public id!: number
 
-    @Property()
+    @Property({ unique: true })
     public label!: string
 
     constructor(label: string) {

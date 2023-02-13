@@ -84,6 +84,15 @@
       "schema": "public",
       "indexes": [
         {
+          "columnNames": [
+            "label"
+          ],
+          "composite": false,
+          "keyName": "sticker_label_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
           "keyName": "sticker_pkey",
           "columnNames": [
             "id"
