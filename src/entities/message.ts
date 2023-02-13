@@ -8,10 +8,14 @@ export class Message {
     @Property()
     public text!: string
 
+    @Property()
+    public sticker!: string[]
+
     @Property({ type: types.date, onUpdate: () => new Date() })
     public date = new Date()
 
-    constructor(text: string) {
+    constructor(text: string, sticker: string[] = []) {
         this.text = text
+        this.sticker = sticker
     }
 }

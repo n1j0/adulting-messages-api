@@ -1,0 +1,49 @@
+<%- include("partials/head.ejs", { title: title }) %>
+
+<div class="container is-max-desktop">
+    <h1 class="is-size-1"><%= table.toLocaleUpperCase() %></h1>
+
+    <div class="notification is-danger">
+        Any click on <strong>Delete</strong> will immediately delete the item from the database.
+    </div>
+
+    <div class="table-container">
+        <% if (entities.length > 0) { %>
+            <table class="table is-fullwidth">
+                <thead>
+                <tr>
+                    <% Object.keys(entities[0]).forEach(key =>{ %>
+                        <th><%= key %></th>
+                    <% }) %>
+                    <th>Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% entities.forEach(entity => {
+                    const id = entity.id
+                %>
+                <tr>
+                    <% Object.values(entity).forEach(value => {
+                        if (typeof value === 'object' && !!value) {
+                            if (value.hasOwnProperty('id')) {
+                                value = value.id
+                            } else {
+                                value = JSON.stringify(value)
+                            }
+                        }
+                    %>
+                    <td><%= value %></td>
+                    <% }) %>
+                    <td>
+                        <form action="/admin/delete" method="get">
+                            <input type="hidden" value="<%= id %>" name="id">
+                            <button class="button is-small is-danger" type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                <% }) %>
+                </tbody>
+            </table>
+        <% } %>
+    </div>
+</div>

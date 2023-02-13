@@ -24,6 +24,15 @@
           "nullable": false,
           "mappedType": "string"
         },
+        "sticker": {
+          "name": "sticker",
+          "type": "text[]",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "array"
+        },
         "date": {
           "name": "date",
           "type": "date",
@@ -39,6 +48,52 @@
       "indexes": [
         {
           "keyName": "message_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "label": {
+          "name": "label",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        }
+      },
+      "name": "sticker",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "label"
+          ],
+          "composite": false,
+          "keyName": "sticker_label_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "sticker_pkey",
           "columnNames": [
             "id"
           ],

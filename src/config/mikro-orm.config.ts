@@ -4,7 +4,7 @@ import { Options } from '@mikro-orm/core'
 import { TsMorphMetadataProvider } from '@mikro-orm/reflection'
 
 export default {
-    debug: process.env.NODE_ENV !== 'production',
+    debug: true,
     tsNode: process.env.NODE_ENV !== 'production',
     entities: ['./.out/entities'],
     entitiesTs: ['./src/entities'],
