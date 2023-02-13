@@ -53,7 +53,7 @@ try {
         return res.render('table', { title: 'Table Panel', table: 'message', entities })
     })
 
-    router.get('/admin/delete', async (request: Request, response: Response) => {
+    router.get('/admin/delete', basicAuth(), async (request: Request, response: Response) => {
         const em = orm.em.fork()
         let entities: any[]
         try {
