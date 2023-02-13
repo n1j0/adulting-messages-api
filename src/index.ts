@@ -4,11 +4,13 @@ import helmet from 'helmet'
 import cors from 'cors'
 // @ts-ignore
 import filter from 'leo-profanity'
+import path from 'node:path'
 import { MikroORM, RequestContext, UniqueConstraintViolationException } from '@mikro-orm/core'
 import type { PostgreSqlDriver } from '@mikro-orm/postgresql'
 import mikroOrmConfig from './config/mikro-orm.config.js'
 import { Message } from './entities/message.js'
 import { Sticker } from './entities/sticker.js'
+import { basicAuth } from './middlewares/basicAuth.js'
 
 try {
     const orm = await MikroORM.init<PostgreSqlDriver>(mikroOrmConfig)
@@ -21,23 +23,56 @@ try {
             await migrator.up()
         }
     } catch (error: any) {
-        console.error(`Migration error occurred: ${error.message}`)
+        console.error(`Migration error occurred: ${ error.message }`)
     }
 
     server.use(express.json())
     server.use(helmet())
     server.use(cors())
     server.use((req, res, next) => {
-        RequestContext.create(orm.em, next);
+        RequestContext.create(orm.em, next)
     })
+
+    server.set('view engine', 'ejs')
+    server.set('views', `${ path.dirname(new URL(import.meta.url).pathname) }/views`)
+
+    server.use(express.static('public'))
 
     server.disable('x-powered-by')
 
     const router = express.Router()
 
+    router.get('/admin', basicAuth(), async (req: Request, res: Response) => {
+        const em = orm.em.fork()
+        let entities: Message[]
+        try {
+            entities = await em.getRepository(Message).findAll()
+        } catch (error) {
+            return res.status(500).json(error)
+        }
+        return res.render('table', { title: 'Table Panel', table: 'message', entities })
+    })
+
+    router.get('/admin/delete', async (request: Request, response: Response) => {
+        const em = orm.em.fork()
+        let entities: any[]
+        try {
+            const { id } = request.query as { id: string }
+            const repository = em.getRepository(Message)
+            const repositoryItem = await repository.findOne({ id } as any)
+            if (repositoryItem) {
+                await repository.removeAndFlush(repositoryItem)
+            }
+            entities = await repository.findAll()
+            return response.render('table', { title: 'Table Panel', table: 'message', entities })
+        } catch (error) {
+            return response.status(500).json(error)
+        }
+    })
+
     router.get('/messages', async (req: Request, res: Response) => {
         const em = orm.em.fork()
-        return res.status(200).json(await em.find('Message', {} as any, { limit: 100, orderBy: [ { id: 'DESC' }] }))
+        return res.status(200).json(await em.find('Message', {} as any, { limit: 100, orderBy: [ { id: 'DESC' } ] }))
     })
 
     router.get('/sticker', async (req: Request, res: Response) => {
@@ -100,7 +135,7 @@ try {
             if (sticker.length > 5) {
                 return res.status(400).json({ message: 'Sticker must be an array of strings with a maximum of 5 items' })
             }
-            cleanSticker = [...new Set(sticker)]
+            cleanSticker = [ ...new Set(sticker) ]
         }
         const em = orm.em.fork()
         const cleanMsg = filter.clean(msg.trim())
