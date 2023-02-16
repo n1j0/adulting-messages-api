@@ -11,7 +11,7 @@ import mikroOrmConfig from './config/mikro-orm.config.js'
 import { Message } from './entities/message.js'
 import { Sticker } from './entities/sticker.js'
 import { basicAuth } from './middlewares/basicAuth.js'
-import { apiKey } from "./middlewares/apiKey";
+import { apiKey } from './middlewares/apiKey.js'
 
 try {
     const orm = await MikroORM.init<PostgreSqlDriver>(mikroOrmConfig)
@@ -24,7 +24,7 @@ try {
             await migrator.up()
         }
     } catch (error: any) {
-        console.error(`Migration error occurred: ${ error.message }`)
+        console.error(`Migration error occurred: ${error.message}`)
     }
 
     server.use(express.json())
@@ -35,7 +35,7 @@ try {
     })
 
     server.set('view engine', 'ejs')
-    server.set('views', `${ path.dirname(new URL(import.meta.url).pathname) }/views`)
+    server.set('views', `${path.dirname(new URL(import.meta.url).pathname)}/views`)
 
     server.use(express.static('public'))
 
@@ -73,7 +73,7 @@ try {
 
     router.get('/messages', apiKey(), async (req: Request, res: Response) => {
         const em = orm.em.fork()
-        return res.status(200).json(await em.find('Message', {} as any, { limit: 100, orderBy: [ { id: 'DESC' } ] }))
+        return res.status(200).json(await em.find('Message', {} as any, { limit: 100, orderBy: [{ id: 'DESC' }] }))
     })
 
     router.get('/sticker', apiKey(), async (req: Request, res: Response) => {
@@ -136,7 +136,7 @@ try {
             if (sticker.length > 5) {
                 return res.status(400).json({ message: 'Sticker must be an array of strings with a maximum of 5 items' })
             }
-            cleanSticker = [ ...new Set(sticker) ]
+            cleanSticker = [...new Set(sticker)]
         }
         const em = orm.em.fork()
         const cleanMsg = filter.clean(msg.trim())
