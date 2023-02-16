@@ -112,7 +112,7 @@ try {
         }
     })
 
-    router.post('/add', async (req: Request, res: Response) => {
+    router.post('/add', apiKey(), async (req: Request, res: Response) => {
         const { msg, sticker } = req.body
 
         if (!msg) {
