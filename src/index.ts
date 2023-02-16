@@ -11,6 +11,7 @@ import mikroOrmConfig from './config/mikro-orm.config.js'
 import { Message } from './entities/message.js'
 import { Sticker } from './entities/sticker.js'
 import { basicAuth } from './middlewares/basicAuth.js'
+import { apiKey } from "./middlewares/apiKey";
 
 try {
     const orm = await MikroORM.init<PostgreSqlDriver>(mikroOrmConfig)
@@ -70,17 +71,17 @@ try {
         }
     })
 
-    router.get('/messages', async (req: Request, res: Response) => {
+    router.get('/messages', apiKey(), async (req: Request, res: Response) => {
         const em = orm.em.fork()
         return res.status(200).json(await em.find('Message', {} as any, { limit: 100, orderBy: [ { id: 'DESC' } ] }))
     })
 
-    router.get('/sticker', async (req: Request, res: Response) => {
+    router.get('/sticker', apiKey(), async (req: Request, res: Response) => {
         const em = orm.em.fork()
         return res.status(200).json(await em.find('Sticker', {} as any))
     })
 
-    router.get('/messages/:id', async (req: Request, res: Response) => {
+    router.get('/messages/:id', apiKey(), async (req: Request, res: Response) => {
         const { id } = req.params
         if (!id) {
             return res.status(400).json({ message: 'Missing ID' })
